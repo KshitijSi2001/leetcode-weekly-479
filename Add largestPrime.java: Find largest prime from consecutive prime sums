@@ -1,0 +1,49 @@
+class Solution {
+    public int largestPrime(int n) {
+        boolean[] isPrime = new boolean[n+1];
+        for(int i = 0 ; i <= n ; i++){
+            isPrime[i] = true;
+        }
+
+        for(int i = 2 ; i*i <= n ; i++){
+            if(isPrime[i]){
+                for(int j = i*i ; j <= n ; j += i){
+                    isPrime[j] = false;
+                }
+            }
+        }
+        int cnt = 0;
+        for(int i = 2 ; i <= n ; i++){
+            if(isPrime[i]){
+                cnt++;
+            }
+        }
+
+        int[] primesTillN = new int[cnt];
+        int idx = 0;
+        for(int i = 2 ; i <= n ; i++){
+            if(isPrime[i]){
+                primesTillN[idx++] = i;
+            }
+        }
+
+        int[] prefSum = new int[cnt];
+        for(int i = 0 ; i < primesTillN.length ; i++){
+            if(i == 0){
+                prefSum[i] = primesTillN[i];
+            }
+            else{
+                prefSum[i] = prefSum[i-1] + primesTillN[i];
+            }
+
+        }
+        int result = 0 ;
+        for(int i = 0 ; i < prefSum.length ; i++){
+           if(prefSum[i] > n) break;
+            if(isPrime[prefSum[i]]){
+                result = Math.max(result, prefSum[i]);
+            }
+        }
+        return result;
+    }
+}
